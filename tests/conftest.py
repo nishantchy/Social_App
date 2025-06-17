@@ -10,7 +10,7 @@ from app import models
 from app.utils import hash
 from tests.test_config import test_settings
 
-# Create test database
+# Create SQLite test database
 engine = create_engine(
     test_settings.DATABASE_URL,
     connect_args={"check_same_thread": False},
@@ -20,6 +20,7 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 
 @pytest.fixture
 def db_session():
+    """Create a fresh database session for each test"""
     Base.metadata.create_all(bind=engine)
     db = TestingSessionLocal()
     try:
@@ -30,6 +31,7 @@ def db_session():
 
 @pytest.fixture
 def client(db_session):
+    """Create a test client with database session override"""
     def override_get_db():
         try:
             yield db_session
@@ -43,6 +45,7 @@ def client(db_session):
 
 @pytest.fixture
 def test_user(db_session):
+    """Create a test user"""
     user_data = {
         "email": "test@example.com",
         "password": hash("password123")
@@ -55,6 +58,7 @@ def test_user(db_session):
 
 @pytest.fixture
 def test_post(db_session, test_user):
+    """Create a test post"""
     post_data = {
         "title": "Test Post",
         "content": "Test Content",
@@ -64,4 +68,4 @@ def test_post(db_session, test_user):
     db_session.add(post)
     db_session.commit()
     db_session.refresh(post)
-    return post 
+    return post
