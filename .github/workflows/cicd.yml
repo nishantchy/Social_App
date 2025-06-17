@@ -35,7 +35,8 @@ jobs:
           status: failure
           channel: "#ci-cd"
           text: "🔴 Tests failed for ${{ github.repository }} on branch ${{ github.ref_name }}"
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Slack Notification - Tests Passed
         if: success()
@@ -44,7 +45,8 @@ jobs:
           status: success
           channel: "#ci-cd"
           text: "✅ Tests passed for ${{ github.repository }} on branch ${{ github.ref_name }}"
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   build-and-push:
     needs: test
@@ -74,7 +76,8 @@ jobs:
           status: success
           channel: "#deployments"
           text: "🚀 Successfully deployed ${{ github.repository }} to production!"
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Slack Notification - Deployment Failed
         if: failure()
@@ -83,7 +86,8 @@ jobs:
           status: failure
           channel: "#deployments"
           text: "❌ Deployment failed for ${{ github.repository }}. Please check the logs."
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   # Notify on workflow completion
   notify:
@@ -105,4 +109,5 @@ jobs:
             • Deployment: ${{ needs.build-and-push.result }}
             • Triggered by: ${{ github.actor }}
             • Branch: ${{ github.ref_name }}
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
