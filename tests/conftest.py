@@ -8,12 +8,11 @@ from app.main import app
 from app.database import get_db, Base
 from app import models
 from app.utils import hash
+from tests.test_config import test_settings
 
 # Create test database
-SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
-
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
+    test_settings.DATABASE_URL,
     connect_args={"check_same_thread": False},
     poolclass=StaticPool,
 )
