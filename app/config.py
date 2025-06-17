@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+import os
 
 class Settings(BaseSettings):
     database_hostname: str
@@ -13,4 +14,9 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
 
-settings = Settings()
+# Check if we're running tests
+if os.getenv("PYTEST_CURRENT_TEST"):
+    from tests.test_config import test_settings
+    settings = test_settings
+else:
+    settings = Settings()

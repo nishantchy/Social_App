@@ -9,6 +9,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      PYTEST_CURRENT_TEST: "1"
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
